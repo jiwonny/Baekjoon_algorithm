@@ -1,22 +1,49 @@
-# https://www.acmicpc.net/problem/7568
-# 덩치
+import unittest
+from unittest.mock import patch
 
-import sys
+def solution(N, measurements):
+  ranks = [1] * N
+  for i in range(N - 1):
+    for j in range(i + 1, N):
+      if measurements[i]['weight'] > measurements[j]['weight'] and measurements[i]['height'] > measurements[j]['height']:
+        ranks[j] += 1
+      
+      if measurements[i]['weight'] < measurements[j]['weight'] and measurements[i]['height'] < measurements[j]['height']:
+        ranks[i] += 1
 
-num = int(sys.stdin.readline())
+  return ranks
 
-inf = []
-rank = [1] * num
-for _ in range(num):
-    inf.append(list(map(int, sys.stdin.readline().split())))
+def main():
+  N = int(input())
+  measurements = []
+  for i in range(N):
+    weight, height = map(int, input().split())
+    measurements.append({
+      'weight': weight,
+      'height': height,
+    })
+
+  result = solution(N, measurements)
+  return ' '.join(map(str, result))
+  
+
+class Test(unittest.TestCase):
+  def test1(self):
+    prompt_input = [
+      '5',
+      '55 185',
+      '58 183',
+      '88 186',
+      '60 175',
+      '46 155',
+    ]
+
+    with patch('builtins.input', side_effect = prompt_input):
+      answer = main()
     
-for i in range(num):
-    for j in range(num):
-        if i == j:
-            continue
+    self.assertEqual('2 2 1 2 5', answer)
+  
 
-        if inf[j][0] > inf[i][0] and inf[j][1] > inf[i][1]:
-            rank[i] += 1
-
-print(' '.join(map(str, rank)))
-
+if __name__ == "__main__":
+  # unittest.main()
+  print(main())

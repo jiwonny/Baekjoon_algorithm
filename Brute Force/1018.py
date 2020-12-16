@@ -1,31 +1,24 @@
-# https://www.acmicpc.net/problem/1018
-# 체스판 다시 칠하기
-
 import sys
 
-N, M = map(int, sys.stdin.readline().split())
-board = []
-for _ in range(N):
-    line = list(sys.stdin.readline().strip())
-    board.append(line)
+N, M = map(int, input().split())
+boards = []
 
-colors = ['W', 'B']
+for i in range(N):
+  boards.append(list(input()))
 
-min_val = 999999
+minimum = sys.maxsize
+colors = ['B', 'W']
 
-for i in range(N - 7):
-    for j in range(M - 7):
-        colors = ['B', 'W']
-        for color in range(len(colors)):
-            count = 0
-            for p in range(i, i + 8):
-                for q in range(j, j + 8):
-                    if board[p][q] != colors[color % 2]:
-                        count += 1
-                    
-                    color += 1
-                color += 1
-            
-            min_val = min(count, min_val)
-    
-print(min_val)
+for start_row in range(N - 7):
+  for start_col in range(M - 7):
+    for color_idx in range(len(colors)):
+      count = 0
+      for i in range(8):
+        for j in range(8):
+          if boards[start_row + i][start_col + j] != colors[color_idx % len(colors)]:
+            count += 1
+          color_idx += 1
+        color_idx += 1
+      minimum = min(minimum, count)
+
+print(minimum)
