@@ -1,56 +1,50 @@
 import sys
 
-n = int(sys.stdin.readline())
-s = []
-index = []
 pairs = []
+abilities = []
+minimum = sys.maxsize
 
-for i in range(n):
-    s.append(list(map(int, sys.stdin.readline().split())))
-    index.append(i)
+def make_pairs(remain, result):
+	if len(result) == 2:
+		pairs.append([] + result)
+		return
 
-minimum = 9999999
+	for i in range(len(remain)):
+		result.append(remain[i])
+		make_pairs(remain[i + 1:], result)
+		result.pop()
 
+def backtracking(remain, result, N):
+	if len(result) == N // 2:
+		global minimum
+		total_1 = 0
+		total_2 = 0
+		another = list(set(list(range(N))).difference(set(result)))
 
-def dfs_team(rem, res = []):
-    if len(res) == 2:
-        global pairs
-        pairs.append(res[0:])
-        return
+		for pair in pairs:
+			player1 = result[pair[0]]
+			player2 = result[pair[1]]
+			total_1 = total_1 + abilities[player1][player2] + abilities[player2][player1]
 
-    for i in range(len(rem)):
-        res.append(rem[i])
-        dfs_team(rem[i+1:], res)
-        res.pop()
+			player3 = another[pair[0]]
+			player4 = another[pair[1]]
+			total_2 = total_2 + abilities[player3][player4] + abilities[player4][player3]
 
+		minimum = min(minimum, abs(total_1 - total_2))	
+		return
+	
+	for i in range(len(remain)):
+		result.append(remain[i])
+		backtracking(remain[i + 1:], result, N)
+		result.pop()
 
-def dfs(rem, res = []):
-    if len(res) == n / 2:
-        global pairs
-        global minimum
-        total1, total2 = 0, 0
-        another = list(set(index).difference(res))
-        
-        for pair in pairs:
-            player1 = res[pair[0]]
-            player2 = res[pair[1]]
-            total1 += s[player1][player2] + s[player2][player1]
+def main():
+	N = int(sys.stdin.readline())
+	for _ in range(N):
+		abilities.append(list(map(int, sys.stdin.readline().split())))
 
-            player3 = another[pair[0]]
-            player4 = another[pair[1]]
-            total2 += s[player3][player4] + s[player4][player3]
-        
-        minimum = min(minimum, abs(total1- total2))
-        return
-        # dfs_team(list(range(0, len(res))), res = [])
-    
-        # minimum = min(minimum, res)
+	make_pairs(list(range(N // 2)), [])
+	backtracking(list(range(N)), [], N)
+	print(minimum)
 
-    for i in range(len(rem)):
-        res.append(rem[i])
-        dfs(rem[i+1:], res)
-        res.pop()
-        
-dfs_team(list(range(0, n // 2)))
-dfs(rem = index, res = [])
-print(minimum)
+main()
