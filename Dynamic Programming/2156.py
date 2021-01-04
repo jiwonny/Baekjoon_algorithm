@@ -1,22 +1,20 @@
-# https://www.acmicpc.net/problem/2156
-# 포도주 시식
+n = int(input())
 
-import sys
-
-n = int(sys.stdin.readline())
-wine = []
-dp = [0] * (n)
+quantities = []
 for _ in range(n):
-    wine.append(int(sys.stdin.readline()))
+    quantities.append(int(input()))
 
-dp[0] = wine[0]
-
-for i in range(1, n):
-    if i == 1:
-        dp[i] = wine[1] + dp[0]
+dp = []
+for i in range(n):
+    if i == 0:
+        dp.append(quantities[i])
+    elif i == 1:
+        dp.append(quantities[i] + quantities[i - 1])
     elif i == 2:
-        dp[i] = max(wine[2] + wine[0], wine[1] + wine[2], wine[0] + wine[1])
+        result = max(quantities[i] + quantities[i - 1], quantities[i] + quantities[i - 2], quantities[i - 1] + quantities[i - 2])
+        dp.append(result)
     else:
-        dp[i] = max(wine[i] + wine[i - 1] + dp[i - 3], wine[i] + dp[i - 2], dp[i - 1])
-    
-print(dp[n - 1])
+        result = max(quantities[i] + quantities[i - 1] + dp[i - 3], quantities[i] + dp[i - 2], dp[i - 1])
+        dp.append(result)
+
+print(dp[-1])

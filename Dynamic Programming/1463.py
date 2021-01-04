@@ -1,22 +1,21 @@
 import sys
 
-N = int(sys.stdin.readline())
+N = int(input())
 
-dp = [0] * (N + 1)
+dp = []
 
-for i in range(2, N + 1):
-    minimum = 9999999
-    if i % 3 == 0:
-        idx = i // 3
-        minimum = min(minimum, dp[idx])
-    
-    if i % 2 == 0:
-        idx = i // 2
-        minimum = min(minimum, dp[idx])
-    
-    minimum = min(minimum, dp[i - 1])
-    dp[i] = minimum + 1
+for i in range(N + 1):
+    if i == 0 or i == 1:
+        dp.append(0)
+    else:
+        result = sys.maxsize
+        if i % 3 == 0:
+            result = min(result, dp[i // 3])
+        
+        if i % 2 == 0:
+            result = min(result, dp[i // 2])
 
-print(dp[N])
+        result = min(result, dp[i - 1])
+        dp.append(result + 1)
 
-    
+print(dp[-1])

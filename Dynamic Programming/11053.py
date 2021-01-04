@@ -1,23 +1,17 @@
-# https://www.acmicpc.net/problem/11053
-# 가장 긴 증가하는 부분 수열
+N = int(input())
+numbers = list(map(int, input().split()))
 
-import sys
+ranks = []
+for i in range(N):
+	if i == 0:
+		ranks.append(1)
+		continue
+	
+	ranks.append(0)
+	for j in range(i):
+		if numbers[j] < numbers[i] and ranks[j] > ranks[i]:
+			ranks[i] = ranks[j]
 
-N = int(sys.stdin.readline())
-lst = list(map(int, sys.stdin.readline().split()))
-rank = [0] * N
-rank_rev = [0] * N
+	ranks[i] += 1
 
-rank[0] = 1
-rank_rev[0] = 1
-
-for i in range(1, N):
-    for j in range(i):
-        # lst[i] 와 lst[j] 비교 
-        if lst[i] > lst[j] and rank[i] < rank[j]:
-            rank[i] = rank[j]
-    
-    rank[i] += 1
-
-
-print(max(rank))
+print(max(ranks))

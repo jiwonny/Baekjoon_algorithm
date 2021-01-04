@@ -1,37 +1,33 @@
-# https://www.acmicpc.net/problem/11054
-# 바이토닉 수열
+N = int(input())
 
-import sys
+numbers = list(map(int, input().split()))
+ranks = [0] * N
+rev_ranks = [0] * N
 
-N = int(sys.stdin.readline())
-lst = list(map(int, sys.stdin.readline().split()))
-rank = [0] * N
-rank_rev = [0] * N
-rank[0] = 1
-rank_rev[0] = 1
-for i in range(1, N):
-    for j in range(i):
-        # lst[i] 와 lst[j] 비교 
-        if lst[i] > lst[j] and rank[i] < rank[j]:
-            rank[i] = rank[j]
-    
-    rank[i] += 1
-# print(rank)
-
-
-lst.reverse()
-
-for i in range(1, N):
-    for j in range(i):
-        # lst[i] 와 lst[j] 비교 
-        if lst[i] > lst[j] and rank_rev[i] < rank_rev[j]:
-            rank_rev[i] = rank_rev[j]
-    
-    rank_rev[i] += 1
-    # print(rank_rev)
-
-rank_rev.reverse()
 for i in range(N):
-    rank[i] = rank[i] + rank_rev[i] - 1
+    if i == 0:
+        ranks[i] = 1
+        continue
 
-print(max(rank))
+    for j in range(i):
+        if numbers[j] < numbers[i] and ranks[j] > ranks[i]:
+            ranks[i] = ranks[j]
+    
+    ranks[i] += 1
+
+for i in range(N - 1, -1, -1):
+    if i == N - 1:
+        rev_ranks[i] = 1
+        continue
+
+    for j in range(i + 1, N):
+        if numbers[j] < numbers[i] and rev_ranks[j] > rev_ranks[i]:
+            rev_ranks[i] = rev_ranks[j]
+    
+    rev_ranks[i] += 1
+
+
+for i in range(N):
+    ranks[i] = ranks[i] + rev_ranks[i] - 1
+
+print(max(ranks))
